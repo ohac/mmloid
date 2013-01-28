@@ -9,19 +9,25 @@ $flag = ""
 $stp = "0"
 $tempwav = "temp___.wav"
 
-def helper(vel, inwav, f2, f3, f4, f5, f6, f7, f8, p1, p2, p3, p4, env)
+def helper(vel, symbol, pitchp, len, f4, offset, lenreq, fixlen, endblank, vol,
+    mod, pitchb1, pitchb2, env)
   tempin = "tempin"
-  `ln -f "#{$oto}/#{inwav}.wav" "#{tempin}.wav"`
-  `ln -f "#{$oto}/#{inwav}_wav.frq" "#{tempin}_wav.frq"`
-  f1 = "#{tempin}.wav"
-  `wine #{$resamp} #{f1} #{$tempwav} #{f2} #{vel} "#{$flag}" #{f5} #{f6} #{f7} #{f8} #{p1} #{p2} #{p3} #{p4}`
-  `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{f3} #{env}`
-  FileUtils.rm_f("#{tempin}.wav")
-  FileUtils.rm_f("#{tempin}_wav.frq")
+  inwav = "#{tempin}.wav"
+  inwavfrq = "#{tempin}_wav.frq"
+  FileUtils.ln("#{$oto}/#{symbol}.wav", inwav)
+  FileUtils.ln("#{$oto}/#{symbol}_wav.frq", inwavfrq)
+  `wine #{$resamp} #{inwav} #{$tempwav} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} #{pitchb1} #{pitchb2}`
+  `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{len} #{env}`
+  FileUtils.rm_f(inwav)
+  FileUtils.rm_f(inwavfrq)
 end
 
 FileUtils.rm_f($output)
 
+# vel, symbol, pitchp, f3, f4, offset, lenreq, fixlen, endblank, vol, mod,
+#     pitchb,
+#     p4
+#     env
 helper(100, "か", "C4", "480@120+69.0", 19, 27.0, 600, 81.0, 46.0, 100, 0,
 "!120.00",
 "AA#44#///+/9/9/8/7/7/8/8/9//ABADAFAIAKANAPAQARASARAQANAKAGADAA/9/7/5/3/3/2/3/3/4/6/7/8/+////AA#12#ABACAEAHAKAOATAYAdAj",

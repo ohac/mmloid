@@ -24,10 +24,6 @@ end
 
 FileUtils.rm_f($output)
 
-# vel, symbol, pitchp, f3, f4, offset, lenreq, fixlen, endblank, vol, mod,
-#     pitchb,
-#     p4
-#     env
 helper(100, "か", "C4", "480@120+69.0", 19, 27.0, 600, 81.0, 46.0, 100, 0,
 "!120.00",
 "AA#44#///+/9/9/8/7/7/8/8/9//ABADAFAIAKANAPAQARASARAQANAKAGADAA/9/7/5/3/3/2/3/3/4/6/7/8/+////AA#12#ABACAEAHAKAOATAYAdAj",
@@ -102,6 +98,12 @@ helper(100, "よ", "E4", "480@120+71.0", 71, 5.0, 600, 282.0, 31.0, 100, 0,
 
 FileUtils.rm_f($tempwav)
 
-`cat #{$output}.whd #{$output}.dat > #{$output}`
-FileUtils.rm_f("#{$output}.whd")
-FileUtils.rm_f("#{$output}.dat")
+File.open($output, 'wb') do |fd|
+  ['whd', 'dat'].each do |fnb|
+    fn = "#{$output}.#{fnb}"
+    File.open(fn, 'rb') do |rfd|
+      fd.write(rfd.read)
+    end
+    FileUtils.rm_f(fn)
+  end
+end

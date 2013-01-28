@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
 # encoding: utf-8
+require 'fileutils'
 $oto = "oto"
 $tool = "wavtool2.exe"
 $resamp = "resampler.exe"
@@ -15,10 +16,11 @@ def helper(vel, inwav, f2, f3, f4, f5, f6, f7, f8, p1, p2, p3, p4, env)
   f1 = "#{tempin}.wav"
   `wine #{$resamp} #{f1} #{$tempwav} #{f2} #{vel} "#{$flag}" #{f5} #{f6} #{f7} #{f8} #{p1} #{p2} #{p3} #{p4}`
   `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{f3} #{env}`
-  `rm #{tempin}.wav #{tempin}_wav.frq`
+  FileUtils.rm_f("#{tempin}.wav")
+  FileUtils.rm_f("#{tempin}_wav.frq")
 end
 
-`rm -f #{$output}`
+FileUtils.rm_f($output)
 
 helper(100, "か", "C4", "480@120+69.0", 19, 27.0, 600, 81.0, 46.0, 100, 0,
 "!120.00",
@@ -92,8 +94,8 @@ helper(100, "よ", "E4", "480@120+71.0", 71, 5.0, 600, 282.0, 31.0, 100, 0,
 "BhBgBeBbBYBVBSBOBKBGBCA+A5A1AwAsAnAjAfAaAXATAPAMAJAHAFADACABAA#30#ABACADAEAFAGAH#3#AGAFAEAC///8/6/3/0/y/v/u/t/t/u/x/0/3/6/9AAADAFAHAIAJ#2#AIAHAGAFAEADABABAA#3#",
 "0 5 35 0 100 100 0 39")
 
-`rm -f #{$tempwav}`
+FileUtils.rm_f($tempwav)
 
 `cat #{$output}.whd #{$output}.dat > #{$output}`
-`rm -f #{$output}.whd`
-`rm -f #{$output}.dat`
+FileUtils.rm_f("#{$output}.whd")
+FileUtils.rm_f("#{$output}.dat")

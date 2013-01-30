@@ -9,6 +9,32 @@ $flag = ""
 $stp = "0"
 $tempwav = "temp___.wav"
 
+def decode(str)
+  table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  i = 0
+  last = 0
+  loop do
+    s1 = str[i]
+    case s1
+    when nil
+      break
+    when '#'
+      i += 1
+      v = str[i..-1].to_i
+p [last, v]
+      i = str.index('#', i) + 1
+    else
+      i += 1
+      s2 = str[i]
+      i += 1
+      ans = table.index(s1) << 6 | table.index(s2)
+      ans -= 4096 if ans >= 2048
+      last = ans
+p ans
+    end
+  end
+end
+
 def helper(vel, symbol, pitchp, len, offset, lenreq, fixlen, endblank, vol,
     mod, pitchb1, pitchb2, env)
   tempin = "tempin"
@@ -16,6 +42,7 @@ def helper(vel, symbol, pitchp, len, offset, lenreq, fixlen, endblank, vol,
   inwavfrq = "#{tempin}_wav.frq"
   FileUtils.ln("#{$oto}/#{symbol}.wav", inwav)
   FileUtils.ln("#{$oto}/#{symbol}_wav.frq", inwavfrq)
+decode(pitchb2)
   `wine #{$resamp} #{inwav} #{$tempwav} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} #{pitchb1} #{pitchb2}`
   `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{len} #{env}`
   FileUtils.rm_f(inwav)

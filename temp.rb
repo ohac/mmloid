@@ -13,6 +13,7 @@ def decode(str)
   table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
   i = 0
   last = 0
+  decoded = []
   loop do
     s1 = str[i]
     case s1
@@ -21,7 +22,7 @@ def decode(str)
     when '#'
       i += 1
       v = str[i..-1].to_i
-p [last, v]
+      decoded += [last] * v
       i = str.index('#', i) + 1
     else
       i += 1
@@ -30,9 +31,10 @@ p [last, v]
       ans = table.index(s1) << 6 | table.index(s2)
       ans -= 4096 if ans >= 2048
       last = ans
-p ans
+      decoded << ans
     end
   end
+  decoded
 end
 
 def helper(vel, symbol, pitchp, len, offset, lenreq, fixlen, endblank, vol,
@@ -42,7 +44,7 @@ def helper(vel, symbol, pitchp, len, offset, lenreq, fixlen, endblank, vol,
   inwavfrq = "#{tempin}_wav.frq"
   FileUtils.ln("#{$oto}/#{symbol}.wav", inwav)
   FileUtils.ln("#{$oto}/#{symbol}_wav.frq", inwavfrq)
-decode(pitchb2)
+p decode(pitchb2)
   `wine #{$resamp} #{inwav} #{$tempwav} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} #{pitchb1} #{pitchb2}`
   `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{len} #{env.join(' ')}`
   FileUtils.rm_f(inwav)

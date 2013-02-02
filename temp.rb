@@ -79,8 +79,10 @@ ROMA = {
 :yo => "よ",
 }
 
-def note(vel, symbol, pitchp, tempo, len, len2, offset, lenreq, fixlen,
+def note(vel, symbol, pitchp, len1, len2, offset, lenreq, fixlen,
     endblank, vol, mod, pitchb2, env)
+  tempo = len1[0]
+  len = len1[1]
   tempin = "tempin"
   inwav = "#{tempin}.wav"
   inwavfrq = "#{tempin}_wav.frq"
@@ -94,7 +96,9 @@ def note(vel, symbol, pitchp, tempo, len, len2, offset, lenreq, fixlen,
   FileUtils.rm_f(inwavfrq)
 end
 
-def rest(tempo, len, len2)
+def rest(len1, len2)
+  tempo = len1[0]
+  len = len1[1]
   # TODO plus/minus sign
   `wine #{$tool} #{$output} #{$oto}/R.wav 0 #{len}@#{tempo}#{len2} 0 0`
 end
@@ -136,27 +140,27 @@ en = [
 ]
 
 tm = 120
-n4 = tm * 4
-n8 = n4 / 2
+n4 = [tm, tm * 4]
+n8 = [tm, tm * 2]
 ve = 100
 vo = 100
 m = 0
 
-note(ve, :ka, "C4", tm, n4, 69.0, 27.0, 600,  81.0, 46.0, vo, m, pb[0], en[0])
-note(ve, :e,  "D4", tm, n4, 28.0, 30.0, 600,  59.0, 48.0, 96, m, pb[1], en[1])
-note(ve, :ru, "E4", tm, n4, 42.0, 23.0, 600, 104.0, 56.0, vo, m, pb[2], en[2])
-note(ve, :no, "F4", tm, n4, 79.0, 19.0, 650,  77.0, 65.0, vo, m, pb[3], en[3])
-note(ve, :u,  "E4", tm, n4,  6.0, 23.0, 550,  52.0, 37.0, 96, m, pb[4], en[4])
-note(ve, :ta, "D4", tm, n4, 20.0, 29.0, 550,  67.0, 91.0, vo, m, pb[5], en[5])
-note(ve, :ga, "C4", tm, n4, 42.0, 24.0, 600,  96.0, 47.0, vo, m, pb[6], en[6])
-rest(tm, n4, -62.0)
-note(ve, :ki, "E4", tm, n4, 14.0, 15.0, 550, 108.0, 41.0, vo, m, pb[7], en[7])
-note(ve, :ko, "F4", tm, n4, 73.0, 22.0, 600,  86.0, 98.0, vo, m, pb[8], en[8])
-note(ve, :e,  "G4", tm, n4, 16.0, 30.0, 550,  59.0, 48.0, 96, m, pb[9], en[9])
-note(ve, :te, "A4", tm, n4, 28.0, 22.0, 550,  62.0, 65.0, vo, m, pb[10], en[10])
-note(ve, :ku, "G4", tm, n4, 12.0, 26.0, 550,  87.0, 53.0, vo, m, pb[11], en[11])
-note(ve, :ru, "F4", tm, n4, 16.0, 23.0, 550, 104.0, 56.0, vo, m, pb[12], en[12])
-note(ve, :yo, "E4", tm, n4, 71.0,  5.0, 600, 282.0, 31.0, vo, m, pb[13], en[13])
+note(ve, :ka, "C4", n4, 69.0, 27.0, 600,  81.0, 46.0, vo, m, pb[0], en[0])
+note(ve, :e,  "D4", n4, 28.0, 30.0, 600,  59.0, 48.0, 96, m, pb[1], en[1])
+note(ve, :ru, "E4", n4, 42.0, 23.0, 600, 104.0, 56.0, vo, m, pb[2], en[2])
+note(ve, :no, "F4", n4, 79.0, 19.0, 650,  77.0, 65.0, vo, m, pb[3], en[3])
+note(ve, :u,  "E4", n4,  6.0, 23.0, 550,  52.0, 37.0, 96, m, pb[4], en[4])
+note(ve, :ta, "D4", n4, 20.0, 29.0, 550,  67.0, 91.0, vo, m, pb[5], en[5])
+note(ve, :ga, "C4", n4, 42.0, 24.0, 600,  96.0, 47.0, vo, m, pb[6], en[6])
+rest(n4, -62.0)
+note(ve, :ki, "E4", n4, 14.0, 15.0, 550, 108.0, 41.0, vo, m, pb[7], en[7])
+note(ve, :ko, "F4", n4, 73.0, 22.0, 600,  86.0, 98.0, vo, m, pb[8], en[8])
+note(ve, :e,  "G4", n4, 16.0, 30.0, 550,  59.0, 48.0, 96, m, pb[9], en[9])
+note(ve, :te, "A4", n4, 28.0, 22.0, 550,  62.0, 65.0, vo, m, pb[10], en[10])
+note(ve, :ku, "G4", n4, 12.0, 26.0, 550,  87.0, 53.0, vo, m, pb[11], en[11])
+note(ve, :ru, "F4", n4, 16.0, 23.0, 550, 104.0, 56.0, vo, m, pb[12], en[12])
+note(ve, :yo, "E4", n4, 71.0,  5.0, 600, 282.0, 31.0, vo, m, pb[13], en[13])
 
 FileUtils.rm_f($tempwav)
 

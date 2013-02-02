@@ -64,22 +64,23 @@ def encode(ary)
   encoded.join
 end
 
-def helper(vel, symbol, pitchp, len, offset, lenreq, fixlen, endblank, vol,
-    mod, pitchb1, pitchb2, env)
+def note(vel, symbol, pitchp, tempo, len, len2, offset, lenreq, fixlen,
+    endblank, vol, mod, pitchb2, env)
   tempin = "tempin"
   inwav = "#{tempin}.wav"
   inwavfrq = "#{tempin}_wav.frq"
   FileUtils.ln("#{$oto}/#{symbol}.wav", inwav)
   FileUtils.ln("#{$oto}/#{symbol}_wav.frq", inwavfrq)
   pitchb2 = encode(pitchb2)
-  `wine #{$resamp} #{inwav} #{$tempwav} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} #{pitchb1} #{pitchb2}`
-  `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{len} #{env.join(' ')}`
+  `wine #{$resamp} #{inwav} #{$tempwav} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} !#{tempo} #{pitchb2}`
+  `wine #{$tool} #{$output} #{$tempwav} #{$stp} #{len}@#{tempo}+#{len2} #{env.join(' ')}`
   FileUtils.rm_f(inwav)
   FileUtils.rm_f(inwavfrq)
 end
 
-def rest(len)
-  `wine #{$tool} #{$output} #{$oto}/R.wav 0 #{len} 0 0`
+def rest(tempo, len, len2)
+  # TODO plus/minus sign
+  `wine #{$tool} #{$output} #{$oto}/R.wav 0 #{len}@#{tempo}#{len2} 0 0`
 end
 
 FileUtils.rm_f($output)
@@ -118,49 +119,22 @@ en = [
 [0, 5, 35, 0, 100, 100, 0, 39],
 ]
 
-helper(100, "か", "C4", "480@120+69.0", 27.0, 600, 81.0, 46.0, 100, 0,
-"!120.00", pb[0], en[0])
-
-helper(100, "え", "D4", "480@120+28.0", 30.0, 600, 59.0, 48.0, 96, 0,
-"!120.00", pb[1], en[1])
-
-helper(100, "る", "E4", "480@120+42.0", 23.0, 600, 104.0, 56.0, 100, 0,
-"!120.00", pb[2], en[2])
-
-helper(100, "の", "F4", "480@120+79.0", 19.0, 650, 77.0, 65.0, 100, 0,
-"!120.00", pb[3], en[3])
-
-helper(100, "う", "E4", "480@120+6.0", 23.0, 550, 52.0, 37.0, 96, 0,
-"!120.00", pb[4], en[4])
-
-helper(100, "た", "D4", "480@120+20.0", 29.0, 550, 67.0, 91.0, 100, 0,
-"!120.00", pb[5], en[5])
-
-helper(100, "が", "C4", "480@120+42.0", 24.0, 600, 96.0, 47.0, 100, 0,
-"!120.00", pb[6], en[6])
-
-rest("480@120-62.0")
-
-helper(100, "き", "E4", "480@120+14.0", 15.0, 550, 108.0, 41.0, 100, 0,
-"!120.00", pb[7], en[7])
-
-helper(100, "こ", "F4", "480@120+73.0", 22.0, 600, 86.0, 98.0, 100, 0,
-"!120.00", pb[8], en[8])
-
-helper(100, "え", "G4", "480@120+16.0", 30.0, 550, 59.0, 48.0, 96, 0,
-"!120.00", pb[9], en[9])
-
-helper(100, "て", "A4", "480@120+28.0", 22.0, 550, 62.0, 65.0, 100, 0,
-"!120.00", pb[10], en[10])
-
-helper(100, "く", "G4", "480@120+12.0", 26.0, 550, 87.0, 53.0, 100, 0,
-"!120.00", pb[11], en[11])
-
-helper(100, "る", "F4", "480@120+16.0", 23.0, 550, 104.0, 56.0, 100, 0,
-"!120.00", pb[12], en[12])
-
-helper(100, "よ", "E4", "480@120+71.0", 5.0, 600, 282.0, 31.0, 100, 0,
-"!120.00", pb[13], en[13])
+tempo = 120
+note(100, "か", "C4", tempo, 480, 69.0, 27.0, 600, 81.0, 46.0, 100, 0, pb[0], en[0])
+note(100, "え", "D4", tempo, 480, 28.0, 30.0, 600, 59.0, 48.0, 96, 0, pb[1], en[1])
+note(100, "る", "E4", tempo, 480, 42.0, 23.0, 600, 104.0, 56.0, 100, 0, pb[2], en[2])
+note(100, "の", "F4", tempo, 480, 79.0, 19.0, 650, 77.0, 65.0, 100, 0, pb[3], en[3])
+note(100, "う", "E4", tempo, 480, 6.0, 23.0, 550, 52.0, 37.0, 96, 0, pb[4], en[4])
+note(100, "た", "D4", tempo, 480, 20.0, 29.0, 550, 67.0, 91.0, 100, 0, pb[5], en[5])
+note(100, "が", "C4", tempo, 480, 42.0, 24.0, 600, 96.0, 47.0, 100, 0, pb[6], en[6])
+rest(tempo, 480, -62.0)
+note(100, "き", "E4", tempo, 480, 14.0, 15.0, 550, 108.0, 41.0, 100, 0, pb[7], en[7])
+note(100, "こ", "F4", tempo, 480, 73.0, 22.0, 600, 86.0, 98.0, 100, 0, pb[8], en[8])
+note(100, "え", "G4", tempo, 480, 16.0, 30.0, 550, 59.0, 48.0, 96, 0, pb[9], en[9])
+note(100, "て", "A4", tempo, 480, 28.0, 22.0, 550, 62.0, 65.0, 100, 0, pb[10], en[10])
+note(100, "く", "G4", tempo, 480, 12.0, 26.0, 550, 87.0, 53.0, 100, 0, pb[11], en[11])
+note(100, "る", "F4", tempo, 480, 16.0, 23.0, 550, 104.0, 56.0, 100, 0, pb[12], en[12])
+note(100, "よ", "E4", tempo, 480, 71.0, 5.0, 600, 282.0, 31.0, 100, 0, pb[13], en[13])
 
 FileUtils.rm_f($tempwav)
 

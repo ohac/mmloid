@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # encoding: utf-8
 require 'fileutils'
-$oto = "oto"
+$oto = "voice/oto"
 $tool = "wavtool2.exe"
 $resamp = "resampler.exe"
 $output = "temp.wav"

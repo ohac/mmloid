@@ -95,7 +95,7 @@ File.open('voice/oto/oto.ini', 'r:Windows-31J') do |fd|
   end
 end
 
-def note(lyric, i, pitchp, len1, lenreq = nil, vel = 100, vol = 100,
+def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
   symbol = lyric[i]
   nsym = lyric[i + 1]
@@ -120,6 +120,7 @@ def note(lyric, i, pitchp, len1, lenreq = nil, vel = 100, vol = 100,
     genwave = $tempwav
     pitchb2 ||= [0] * 123
     pitchb2 = encode(pitchb2)
+    lenreq = len + 20 unless lenreq # TODO
 puts "#{inwav} #{genwave} #{pitchp} #{vel} '#{$flag}' #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} !#{tempo} '#{pitchb2}'"
     `wine #{$resamp} #{inwav} #{genwave} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} "!#{tempo}" #{pitchb2} 2>/dev/null`
     FileUtils.rm_f(inwav)
@@ -128,10 +129,6 @@ puts "#{inwav} #{genwave} #{pitchp} #{vel} '#{$flag}' #{offset} #{lenreq} #{fixl
 puts "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
   `wine #{$tool} #{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')} 2>/dev/null`
   i + 1
-end
-
-def rest(lyric, i, len1)
-  note(lyric, i, nil, len1)
 end
 
 FileUtils.rm_f($output)
@@ -143,21 +140,21 @@ n8 = [tm, tm * 2]
 lyric = [:ka, :e, :ru, :no, :u, :ta, :ga, :r, :ki, :ko, :e, :te, :ku, :ru, :yo]
 lyric << :r
 i = 0
-i = note(lyric, i, "C4", n4, 650)
-i = note(lyric, i, "D4", n4, 500)
-i = note(lyric, i, "E4", n4, 550)
-i = note(lyric, i, "F4", n4, 600)
-i = note(lyric, i, "E4", n4, 450)
-i = note(lyric, i, "D4", n4, 550)
-i = note(lyric, i, "C4", n4, 600)
-i = rest(lyric, i, n4)
-i = note(lyric, i, "E4", n4, 550)
-i = note(lyric, i, "F4", n4, 700)
-i = note(lyric, i, "G4", n4, 450)
-i = note(lyric, i, "A4", n4, 550)
-i = note(lyric, i, "G4", n4, 650)
-i = note(lyric, i, "F4", n4, 500)
-i = note(lyric, i, "E4", n4, 650)
+i = note(lyric, i, n4, "C4")
+i = note(lyric, i, n4, "D4")
+i = note(lyric, i, n4, "E4")
+i = note(lyric, i, n4, "F4")
+i = note(lyric, i, n4, "E4")
+i = note(lyric, i, n4, "D4")
+i = note(lyric, i, n4, "C4")
+i = note(lyric, i, n4)
+i = note(lyric, i, n4, "E4")
+i = note(lyric, i, n4, "F4")
+i = note(lyric, i, n4, "G4")
+i = note(lyric, i, n4, "A4")
+i = note(lyric, i, n4, "G4")
+i = note(lyric, i, n4, "F4")
+i = note(lyric, i, n4, "E4")
 
 FileUtils.rm_f($tempwav)
 

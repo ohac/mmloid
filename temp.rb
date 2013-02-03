@@ -83,27 +83,16 @@ ROMA = {
 KANA2ROMA = {}
 ROMA.each{|k,v|KANA2ROMA[v[0]]=k}
 
-# TODO read parameters from voice/oto/oto.ini
-[
-"う.wav=,0,44,53,2,2",
-"え.wav=,2,58,53,6,6",
-"か.wav=,0,122,49,68,-37",
-"が.wav=,0,79,75,39,-20",
-"き.wav=,0,133,30,74,-38",
-"く.wav=,0,106,56,55,-39",
-"こ.wav=,0,115,59,68,-37",
-"た.wav=,0,78,51,32,-34",
-"て.wav=,0,107,41,50,-35",
-"の.wav=,4,104,38,50,15",
-"よ.wav=,0,171,39,87,33",
-"る.wav=,0,95,60,48,5",
-].each do |line|
-  key, value = line.split('=')
-  key = key.split('.').first
-  roma = KANA2ROMA[key]
-  next unless roma
-  vs = value.split(',').drop(1).map(&:to_f)
-  ROMA[roma] += vs
+File.open('voice/oto/oto.ini', 'r:Windows-31J') do |fd|
+  fd.readlines.each do |line|
+    line = line.encode('utf-8')
+    key, value = line.split('=')
+    key = key.split('.').first
+    roma = KANA2ROMA[key]
+    next unless roma
+    vs = value.split(',').drop(1).map(&:to_f)
+    ROMA[roma] += vs
+  end
 end
 
 def note(vel, symbol, nsym, pitchp, len1, lenreq, vol, mod, pitchb2)

@@ -21,14 +21,17 @@ rm -fr utaustup
 mkdir -p ut
 CABHOME=`basename $CAB`
 file $CABHOME/* | grep able..console | cut -d : -f 1 | xargs -i mv {} ut
-mkdir -p oto
-grep -l AquesTalk_FreeWave $CABHOME/* | xargs -i mv {} oto/AquesTalk.dll
-grep -l FREQ `grep -l wav= $CABHOME/*` | xargs -i mv {} oto/oto.ini
+mkdir -p oto.new
+grep -l AquesTalk_FreeWave $CABHOME/* | xargs -i mv {} oto.new/AquesTalk.dll
+grep -l FREQ `grep -l wav= $CABHOME/*` | xargs -i mv {} oto.new/oto.ini
 rm -fr $CABHOME
 mv `grep -l resampler.exe ut/*` resampler.exe
 mv `grep -l wavtool2 ut/*` wavtool2.exe
-mv `grep -l AquesTalk ut/*` oto/mkdefo.exe
+mv `grep -l AquesTalk ut/*` oto.new/mkdefo.exe
 rm -fr ut
-cd oto
+cd oto.new
 LANG=C wine mkdefo.exe
 # TODO rename generated filenames
+cd ..
+mkdir -p voice
+mv oto.new voice

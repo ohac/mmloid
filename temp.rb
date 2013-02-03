@@ -95,8 +95,10 @@ File.open('voice/oto/oto.ini', 'r:Windows-31J') do |fd|
   end
 end
 
-def note(symbol, nsym, pitchp, len1, lenreq = nil, vel = 100, vol = 100,
+def note(lyric, i, pitchp, len1, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
+  symbol = lyric[i]
+  nsym = lyric[i + 1]
   env = [0, 5, 35, 0, 100, 100, 0]
   tempo = len1[0]
   len = len1[1]
@@ -125,11 +127,11 @@ puts "#{inwav} #{genwave} #{pitchp} #{vel} '#{$flag}' #{offset} #{lenreq} #{fixl
   end
 puts "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
   `wine #{$tool} #{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')} 2>/dev/null`
-  len3
+  i + 1
 end
 
-def rest(nsym, len1)
-  note(:r,  nsym, nil, len1)
+def rest(lyric, i, len1)
+  note(lyric, i, nil, len1)
 end
 
 FileUtils.rm_f($output)
@@ -138,21 +140,24 @@ tm = 120
 n4 = [tm, tm * 4]
 n8 = [tm, tm * 2]
 
-note(:ka, :e,  "C4", n4, 650)
-note(:e,  :ru, "D4", n4, 500)
-note(:ru, :no, "E4", n4, 550)
-note(:no, :u,  "F4", n4, 600)
-note(:u,  :ta, "E4", n4, 450)
-note(:ta, :ga, "D4", n4, 550)
-note(:ga, :r,  "C4", n4, 600)
-rest(:ki, n4)
-note(:ki, :ko, "E4", n4, 550)
-note(:ko, :e,  "F4", n4, 700)
-note(:e,  :te, "G4", n4, 450)
-note(:te, :ku, "A4", n4, 550)
-note(:ku, :ru, "G4", n4, 650)
-note(:ru, :yo, "F4", n4, 500)
-note(:yo, :r,  "E4", n4, 650)
+lyric = [:ka, :e, :ru, :no, :u, :ta, :ga, :r, :ki, :ko, :e, :te, :ku, :ru, :yo]
+lyric << :r
+i = 0
+i = note(lyric, i, "C4", n4, 650)
+i = note(lyric, i, "D4", n4, 500)
+i = note(lyric, i, "E4", n4, 550)
+i = note(lyric, i, "F4", n4, 600)
+i = note(lyric, i, "E4", n4, 450)
+i = note(lyric, i, "D4", n4, 550)
+i = note(lyric, i, "C4", n4, 600)
+i = rest(lyric, i, n4)
+i = note(lyric, i, "E4", n4, 550)
+i = note(lyric, i, "F4", n4, 700)
+i = note(lyric, i, "G4", n4, 450)
+i = note(lyric, i, "A4", n4, 550)
+i = note(lyric, i, "G4", n4, 650)
+i = note(lyric, i, "F4", n4, 500)
+i = note(lyric, i, "E4", n4, 650)
 
 FileUtils.rm_f($tempwav)
 

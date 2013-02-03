@@ -72,11 +72,13 @@ ROMA = {
 :u  => ["う"],
 :ta => ["た"],
 :ga => ["が"],
+:ge => ["げ"],
 :ki => ["き"],
 :ko => ["こ"],
 :te => ["て"],
 :ku => ["く"],
 :yo => ["よ"],
+:ro => ["ろ"],
 :r  => ["R", 0.0, 0.0, 0.0, 0.0, 0],
 }
 
@@ -98,6 +100,7 @@ end
 def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
   symbol = lyric[i]
+p [symbol, len1, pitchp]
   nsym = lyric[i + 1]
   env = [0, 5, 35, 0, 100, 100, 0]
   tempo = len1[0]
@@ -137,13 +140,29 @@ tm = 120
 n4 = [tm, tm * 4]
 n8 = [tm, tm * 2]
 
-lyric  = [:ka,  :e,   :ru,  :no,  :u,   :ta,  :ga,  :r]
-dura   = [n4,   n4,   n4,   n4,   n4,   n4,   n4,   n4]
-notes  = ["C4", "D4", "E4", "F4", "E4", "D4", "C4", nil]
+lyric = []
+dura  = []
+notes = []
+
+lyric += [:ka,  :e,   :ru,  :no,  :u,   :ta,  :ga,  :r]
+dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4,   n4]
+notes += ["C4", "D4", "E4", "F4", "E4", "D4", "C4", nil]
 
 lyric += [:ki,  :ko,  :e,   :te,  :ku,  :ru,  :yo, :r]
-dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4]
-notes += ["E4", "F4", "G4", "A4", "G4", "F4", "E4"]
+dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4, n4]
+notes += ["E4", "F4", "G4", "A4", "G4", "F4", "E4", nil]
+
+lyric += [:ga,  :r,  :ga,  :r,  :ga,  :r,  :ga,  :r]
+dura  += [n4,   n4,   n4,  n4,  n4,   n4,  n4,   n4]
+notes += ["C4", nil, "C4", nil, "C4", nil, "C4", nil]
+
+lyric += [:ge,  :ro,  :ge,  :ro,  :ge,  :ro,  :ge,  :ro]
+dura  += [n8,   n8,   n8,   n8,   n8,   n8,   n8,   n8]
+notes += ["C4", "C4", "D4", "D4", "E4", "E4", "F4", "F4"]
+
+lyric += [:ga,  :r,  :ga,  :r,  :ga, :r]
+dura  += [n8,   n8,  n8,   n8,  n4]
+notes += ["E4", nil, "D4", nil, "C4"]
 
 i = 0
 while dura[i] do

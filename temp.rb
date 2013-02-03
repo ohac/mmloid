@@ -95,7 +95,8 @@ File.open('voice/oto/oto.ini', 'r:Windows-31J') do |fd|
   end
 end
 
-def note(vel, symbol, nsym, pitchp, len1, lenreq, vol, mod, pitchb2)
+def note(symbol, nsym, pitchp, len1, lenreq = nil, vel = 100, vol = 100,
+    mod = 0, pitchb2 = nil)
   env = [0, 5, 35, 0, 100, 100, 0]
   tempo = len1[0]
   len = len1[1]
@@ -108,7 +109,6 @@ def note(vel, symbol, nsym, pitchp, len1, lenreq, vol, mod, pitchb2)
   env << len32 if len32 != 0
   len2 = len3 + len32 - len4
   len2 = "#{len2 >= 0 ? '+' : ''}#{len2}"
-  pitchb2 = encode(pitchb2)
   genwave = "#{$oto}/R.wav"
   if symbol == :r
     env = [0, 0]
@@ -116,6 +116,8 @@ def note(vel, symbol, nsym, pitchp, len1, lenreq, vol, mod, pitchb2)
     FileUtils.ln("#{$oto}/#{sym2}.wav", inwav)
     FileUtils.ln("#{$oto}/#{sym2}_wav.frq", inwavfrq)
     genwave = $tempwav
+    pitchb2 ||= [0] * 123
+    pitchb2 = encode(pitchb2)
 puts "#{inwav} #{genwave} #{pitchp} #{vel} '#{$flag}' #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} !#{tempo} '#{pitchb2}'"
     `wine #{$resamp} #{inwav} #{genwave} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} "!#{tempo}" #{pitchb2} 2>/dev/null`
     FileUtils.rm_f(inwav)
@@ -126,37 +128,31 @@ puts "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
   len3
 end
 
-def rest(len1, nsym)
-  ve = 100
-  vo = 100
-  note(ve, :r,  nsym, "C4", len1, 0.0, vo, 0, []) # TODO
+def rest(nsym, len1)
+  note(:r,  nsym, nil, len1)
 end
 
 FileUtils.rm_f($output)
 
-pb = [0] * 123
 tm = 120
 n4 = [tm, tm * 4]
 n8 = [tm, tm * 2]
-ve = 100
-vo = 100
-m = 0
 
-note(ve, :ka, :e,  "C4", n4, 650, vo, m, pb)
-note(ve, :e,  :ru, "D4", n4, 500, vo, m, pb)
-note(ve, :ru, :no, "E4", n4, 550, vo, m, pb)
-note(ve, :no, :u,  "F4", n4, 600, vo, m, pb)
-note(ve, :u,  :ta, "E4", n4, 450, vo, m, pb)
-note(ve, :ta, :ga, "D4", n4, 550, vo, m, pb)
-note(ve, :ga, :r,  "C4", n4, 600, vo, m, pb)
-rest(n4, :ki)
-note(ve, :ki, :ko, "E4", n4, 550, vo, m, pb)
-note(ve, :ko, :e,  "F4", n4, 700, vo, m, pb)
-note(ve, :e,  :te, "G4", n4, 450, vo, m, pb)
-note(ve, :te, :ku, "A4", n4, 550, vo, m, pb)
-note(ve, :ku, :ru, "G4", n4, 650, vo, m, pb)
-note(ve, :ru, :yo, "F4", n4, 500, vo, m, pb)
-note(ve, :yo, :r,  "E4", n4, 650, vo, m, pb)
+note(:ka, :e,  "C4", n4, 650)
+note(:e,  :ru, "D4", n4, 500)
+note(:ru, :no, "E4", n4, 550)
+note(:no, :u,  "F4", n4, 600)
+note(:u,  :ta, "E4", n4, 450)
+note(:ta, :ga, "D4", n4, 550)
+note(:ga, :r,  "C4", n4, 600)
+rest(:ki, n4)
+note(:ki, :ko, "E4", n4, 550)
+note(:ko, :e,  "F4", n4, 700)
+note(:e,  :te, "G4", n4, 450)
+note(:te, :ku, "A4", n4, 550)
+note(:ku, :ru, "G4", n4, 650)
+note(:ru, :yo, "F4", n4, 500)
+note(:yo, :r,  "E4", n4, 650)
 
 FileUtils.rm_f($tempwav)
 

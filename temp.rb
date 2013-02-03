@@ -137,24 +137,18 @@ tm = 120
 n4 = [tm, tm * 4]
 n8 = [tm, tm * 2]
 
-lyric = [:ka, :e, :ru, :no, :u, :ta, :ga, :r, :ki, :ko, :e, :te, :ku, :ru, :yo]
-lyric << :r
+lyric  = [:ka,  :e,   :ru,  :no,  :u,   :ta,  :ga,  :r]
+dura   = [n4,   n4,   n4,   n4,   n4,   n4,   n4,   n4]
+notes  = ["C4", "D4", "E4", "F4", "E4", "D4", "C4", nil]
+
+lyric += [:ki,  :ko,  :e,   :te,  :ku,  :ru,  :yo, :r]
+dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4]
+notes += ["E4", "F4", "G4", "A4", "G4", "F4", "E4"]
+
 i = 0
-i = note(lyric, i, n4, "C4")
-i = note(lyric, i, n4, "D4")
-i = note(lyric, i, n4, "E4")
-i = note(lyric, i, n4, "F4")
-i = note(lyric, i, n4, "E4")
-i = note(lyric, i, n4, "D4")
-i = note(lyric, i, n4, "C4")
-i = note(lyric, i, n4)
-i = note(lyric, i, n4, "E4")
-i = note(lyric, i, n4, "F4")
-i = note(lyric, i, n4, "G4")
-i = note(lyric, i, n4, "A4")
-i = note(lyric, i, n4, "G4")
-i = note(lyric, i, n4, "F4")
-i = note(lyric, i, n4, "E4")
+while dura[i] do
+  i = note(lyric, i, dura[i], notes[i])
+end
 
 FileUtils.rm_f($tempwav)
 

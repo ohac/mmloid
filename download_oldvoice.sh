@@ -2,7 +2,7 @@
 if ! [ -a "defaultvoice.uar" ]; then
   wget http://utau2008.xrea.jp/defaultvoice.uar
 fi
+unzip defaultvoice.uar
 mkdir -p voice
-cd voice
-unzip ../defaultvoice.uar
-cd ..
+mv oto voice/oto.old
+mv install.txt voice/oto.old

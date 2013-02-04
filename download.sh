@@ -23,9 +23,13 @@ CABHOME=`basename $CAB`
 file $CABHOME/* | grep able..console | cut -d : -f 1 | xargs -i mv {} ut
 grep -l AquesTalk_FreeWave $CABHOME/* | xargs -i mv {} AquesTalk.dll
 mkdir -p voice/oto
-grep -l FREQ `grep -l wav= $CABHOME/*` | xargs -i mv {} voice/oto/oto.ini
+grep -l wav= $CABHOME/* | xargs -i mv {} voice/oto/
+cat voice/oto/_* | grep --binary-files=text wav | \
+    nkf -w | grep -o '[[:print:]]*.wav=[[:print:]]*' | \
+    nkf -s > voice/oto/oto.ini
+grep -l wav= $CABHOME/* | xargs -i mv {} voice/oto/
 rm -fr $CABHOME
-mv `grep -l resampler.exe ut/*` resampler.exe
-mv `grep -l wavtool2 ut/*` wavtool2.exe
-mv `grep -l AquesTalk ut/*` mkdefo.exe
+mv -f `grep -l resampler.exe ut/*` resampler.exe
+mv -f `grep -l wavtool2 ut/*` wavtool2.exe
+mv -f `grep -l AquesTalk ut/*` mkdefo.exe
 rm -fr ut

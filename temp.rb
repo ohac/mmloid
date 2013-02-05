@@ -85,7 +85,7 @@ ROMA = {
 KANA2ROMA = {}
 ROMA.each{|k,v|KANA2ROMA[v[0]]=k}
 
-File.open('voice/oto/oto.ini', 'r:Windows-31J') do |fd|
+File.open("#{$oto}/oto.ini", 'r:Windows-31J') do |fd|
   fd.readlines.each do |line|
     line = line.encode('utf-8')
     key, value = line.split('=')

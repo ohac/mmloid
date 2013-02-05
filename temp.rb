@@ -1,10 +1,11 @@
 #!/usr/bin/ruby
 # encoding: utf-8
 require 'fileutils'
-$oto = "voice/oto"
+voice = %w[kasa/tan defota koe loli man2 momo nago oto oto.old][7]
+$oto = "voice/" + voice
 $tool = "wavtool2.exe"
 $resamp = "resampler.exe"
-$output = "temp.wav"
+$output = voice + ".wav"
 $flag = ""
 $stp = "0"
 $tempwav = "temp___.wav"

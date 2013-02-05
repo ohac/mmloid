@@ -1,4 +1,5 @@
 #!/bin/bash
+export LANG=ja_JP.UTF-8
 dd if=/dev/zero of=oto.ntfs.img count=10 bs=1024k
 LOOPDEV=`sudo losetup -f`
 sudo losetup $LOOPDEV oto.ntfs.img
@@ -13,5 +14,6 @@ ls *.wav | xargs -i wine resampler.exe {} dummy 0 0
 cp -f *.wav *.frq ../voice/oto
 cd ..
 sudo umount oto.ntfs
+sudo losetup -d $LOOPDEV
 rm -r oto.ntfs
 rm -f oto.ntfs.img

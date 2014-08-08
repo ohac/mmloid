@@ -7,14 +7,14 @@ fi
 if ! [ -a "utau0416installer.zip" ]; then
   echo "Please read http://utau2008.web.fc2.com/ before install."
   sleep 3
-  wget http://utau2008.xrea.jp/utau0416installer.zip
+  wget http://utau2008.xrea.jp/utau0418e-inst.zip
 fi
 # unzip for japanese http://www.ubuntulinux.jp/japanese
-unzip utau0416installer.zip
-unar utau0416inst.exe
-rm utau0416inst.exe
-unar utau0416inst/utaustup.msi
-rm -fr utau0416inst
+unzip utau0418e-inst.zip
+unar utau0418e-inst.exe
+rm utau0418e-inst.exe
+unar utau0418e-inst/utaustup.msi
+rm -fr utau0418e-inst
 CAB=`file utaustup/* | grep Cabi | cut -d : -f 1`
 unar $CAB
 rm -fr utaustup

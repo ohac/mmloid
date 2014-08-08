@@ -7,6 +7,7 @@ if ! [ -a "TETO-tougou-110401.zip" ]; then
   #wget http://kasaneteto.jp/ongendl/index.cgi/extra/TETO-sasayakitougou-110917.zip
   #wget http://kasaneteto.jp/ongendl/index.cgi/extra/TETO-extra-100619.zip
 fi
+unzip TETO-tougou-110401.zip
 mkdir -p voice
 mv 重音テト音声ライブラリー/ voice/kasa
 mv install.txt voice/kasa

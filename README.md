@@ -16,7 +16,10 @@ Listen to an example song
 
 Option: Download other voices (Check LISENCE before use)
 
-    ./download_kasaneteto.sh
+    sudo add-apt-repository ppa:japaneseteam/ppa
+    sudo apt-get update
+    sudo apt-get install unzip
+    ./download_kasaneteto.sh # http://kasaneteto.jp/
     ./download_oldvoice.sh
     ./download_othervoices.sh
 

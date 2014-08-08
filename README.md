@@ -8,7 +8,7 @@ Please read http://utau2008.web.fc2.com/ before install.
 
 Convert an example song
 
-    ruby temp.rb
+    ruby bin/utau4linux
 
 Listen to an example song
 

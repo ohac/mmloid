@@ -101,7 +101,6 @@ end
 def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
   symbol = lyric[i]
-p [symbol, len1, pitchp]
   nsym = lyric[i + 1]
   env = [0, 5, 35, 0, 100, 100, 0]
   tempo = len1[0]
@@ -125,59 +124,27 @@ p [symbol, len1, pitchp]
     pitchb2 ||= [0] * 123
     pitchb2 = encode(pitchb2)
     lenreq = len + 20 unless lenreq # TODO
-puts "#{inwav} #{genwave} #{pitchp} #{vel} '#{$flag}' #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} !#{tempo} '#{pitchb2}'"
     `wine #{$resamp} #{inwav} #{genwave} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} "!#{tempo}" #{pitchb2} 2>/dev/null`
     FileUtils.rm_f(inwav)
     FileUtils.rm_f(inwavfrq)
   end
-puts "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
   `wine #{$tool} #{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')} 2>/dev/null`
+  FileUtils.rm_f($tempwav)
   i + 1
 end
 
-FileUtils.rm_f($output)
-
-tm = 120
-n4 = [tm, tm * 4]
-n8 = [tm, tm * 2]
-
-lyric = []
-dura  = []
-notes = []
-
-lyric += [:ka,  :e,   :ru,  :no,  :u,   :ta,  :ga,  :r]
-dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4,   n4]
-notes += ["C4", "D4", "E4", "F4", "E4", "D4", "C4", nil]
-
-lyric += [:ki,  :ko,  :e,   :te,  :ku,  :ru,  :yo, :r]
-dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4, n4]
-notes += ["E4", "F4", "G4", "A4", "G4", "F4", "E4", nil]
-
-lyric += [:ga,  :r,  :ga,  :r,  :ga,  :r,  :ga,  :r]
-dura  += [n4,   n4,   n4,  n4,  n4,   n4,  n4,   n4]
-notes += ["C4", nil, "C4", nil, "C4", nil, "C4", nil]
-
-lyric += [:ge,  :ro,  :ge,  :ro,  :ge,  :ro,  :ge,  :ro]
-dura  += [n8,   n8,   n8,   n8,   n8,   n8,   n8,   n8]
-notes += ["C4", "C4", "D4", "D4", "E4", "E4", "F4", "F4"]
-
-lyric += [:ga,  :r,  :ga,  :r,  :ga, :r]
-dura  += [n8,   n8,  n8,   n8,  n4]
-notes += ["E4", nil, "D4", nil, "C4"]
-
-i = 0
-while dura[i] do
-  i = note(lyric, i, dura[i], notes[i])
-end
-
-FileUtils.rm_f($tempwav)
-
-File.open($output, 'wb') do |fd|
-  ['whd', 'dat'].each do |fnb|
-    fn = "#{$output}.#{fnb}"
-    File.open(fn, 'rb') do |rfd|
-      fd.write(rfd.read)
+def convert2wav(lyric, dura, notes, output = $output)
+  i = 0
+  while dura[i] do
+    i = note(lyric, i, dura[i], notes[i])
+  end
+  File.open(output, 'wb') do |fd|
+    ['whd', 'dat'].each do |fnb|
+      fn = "#{$output}.#{fnb}"
+      File.open(fn, 'rb') do |rfd|
+        fd.write(rfd.read)
+      end
+      FileUtils.rm_f(fn)
     end
-    FileUtils.rm_f(fn)
   end
 end

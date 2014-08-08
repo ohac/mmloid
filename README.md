@@ -2,7 +2,7 @@ UTAU for linux
 
 Please read http://utau2008.web.fc2.com/ before install.
 
-    sudo apt-get install unar
+    sudo apt-get install wine unar ruby
     ./download.sh
     ./mkdefo.sh
 

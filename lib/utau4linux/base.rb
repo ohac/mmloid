@@ -256,7 +256,17 @@ end
 def convert2wav(lyric, dura, notes, output = $output)
   i = 0
   while dura[i] do
-    i = note(lyric, i, dura[i], notes[i])
+    n = notes[i]
+    if n.nil?
+    elsif n.index('-')
+      o = n[-1]
+      nn = 'C D EF G A B'.index(n[0])
+      x = ['B', nil, 'C#', nil, 'D#', 'E', nil, 'F#', nil, 'G#', nil, 'A#'][nn]
+      n = x + o
+    else
+      n.gsub!('+', '#')
+    end
+    i = note(lyric, i, dura[i], n)
   end
   File.open(output, 'wb') do |fd|
     ['whd', 'dat'].each do |fnb|

@@ -19,16 +19,16 @@ lyric = []
 dura = []
 notes = []
 
-mmlutf8 = File.open(file, 'r'){|fd|fd.read}
-body = mmlutf8
+body = File.open(file, 'r'){|fd|fd.read}
 mml = ''
 
 loop do
   pre, str, post = body.partition(/[ぁ-ゞ]+/u)
   mml += pre
   break if post.empty?
-  roma = KANA2ROMA[str].to_s
-  mml += '!' + roma + ' '
+  roma = KANA2ROMA[str]
+  mml += '!' + roma.to_s if roma
+  mml += ' '
   body = post
 end
 

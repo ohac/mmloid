@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+# coding: utf-8
 $: << File.join(File.dirname(__FILE__), '../lib') # TODO gem
 require 'utau4linux'
 
@@ -18,7 +19,19 @@ lyric = []
 dura = []
 notes = []
 
-mml = File.open(file, 'r'){|fd|fd.read}
+mmlutf8 = File.open(file, 'r'){|fd|fd.read}
+body = mmlutf8
+mml = ''
+
+loop do
+  pre, str, post = body.partition(/[ぁ-ゞ]+/u)
+  mml += pre
+  break if post.empty?
+  roma = KANA2ROMA[str].to_s
+  mml += '!' + roma + ' '
+  body = post
+end
+
 mml.gsub(ABNFParser::MMLLine) do |line|
   next if /^#/ === line
   line.chomp!

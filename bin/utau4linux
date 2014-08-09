@@ -61,11 +61,11 @@ mml.gsub(ABNFParser::MMLLine) do |line|
         dot = ev[-1] == '.'
       end
       lyric << :r
-      dura << [@tempo, @tempo * 16 / len + (dot ? @tempo * 32 / len : 0)]
+      dura << [@tempo, @tempo * 16 / len + (dot ? @tempo * 8 / len : 0)]
       notes << nil
     when /[a-g]/
       note, len, dot = ABNFParser.parsenotestr(ev, @octave, @deflen, false)
-      dura << [@tempo, @tempo * 16 / len + (dot ? @tempo * 32 / len : 0)]
+      dura << [@tempo, @tempo * 16 / len + (dot ? @tempo * 8 / len : 0)]
       notes << note
     else
       lyric << ev[1..-1].to_sym

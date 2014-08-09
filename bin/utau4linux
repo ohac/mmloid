@@ -2,34 +2,64 @@
 $: << File.join(File.dirname(__FILE__), '../lib') # TODO gem
 require 'utau4linux'
 
-#=begin
-tm = 120
-n4 = [tm, tm * 4]
-n8 = [tm, tm * 2]
+if ARGV.size < 2
+  puts "usage: ruby bin/utau4linux input.mml output.wav [-v]"
+  exit
+end
+
+file = ARGV[0]
+outputfile = ARGV[1]
+
+@tempo = 120
+@octave = 4
+@deflen = 4
 
 lyric = []
-dura  = []
+dura = []
 notes = []
 
-lyric += [:ka,  :e,   :ru,  :no,  :u,   :ta,  :ga,  :r]
-dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4,   n4]
-notes += ["C4", "D4", "E4", "F4", "E4", "D4", "C4", nil]
+mml = File.open(file, 'r'){|fd|fd.read}
+mml.gsub(ABNFParser::MMLLine) do |line|
+  next if /^#/ === line
+  line.chomp!
+  line.gsub(ABNFParser::Event) do |ev|
+    case ev[0]
+    when 't'
+      @tempo = ev[1..-1].to_i
+    when 'v'
+    when "'"
+    when '@'
+    when ';'
+    when 'p'
+    when 'w'
+    when 'o'
+      @octave = ev[1..-1].to_i
+    when /[<>]/
+      @octave += ev[0] == '>' ? 1 : -1
+    when 'l'
+      @deflen = ev[1..-1].to_i
+    when 'q'
+    when 'r' # rest
+      if ev.size == 1
+        len = @deflen
+        dot = false
+      else
+        len = ev[1..-1].to_i
+        dot = ev[-1] == '.'
+      end
+      lyric << :r
+      dura << [@tempo, @tempo * 16 / len + (dot ? @tempo * 32 / len : 0)]
+      notes << nil
+    when /[a-g]/
+      note, len, dot = ABNFParser.parsenotestr(ev, @octave, @deflen, false)
+      dura << [@tempo, @tempo * 16 / len + (dot ? @tempo * 32 / len : 0)]
+      notes << note
+    else
+      lyric << ev[1..-1].to_sym
+    end
+  end
+end
 
-lyric += [:ki,  :ko,  :e,   :te,  :ku,  :ru,  :yo, :r]
-dura  += [n4,   n4,   n4,   n4,   n4,   n4,   n4, n4]
-notes += ["E4", "F4", "G4", "A4", "G4", "F4", "E4", nil]
+lyric << :r
 
-lyric += [:ga,  :r,  :ga,  :r,  :ga,  :r,  :ga,  :r]
-dura  += [n4,   n4,   n4,  n4,  n4,   n4,  n4,   n4]
-notes += ["C4", nil, "C4", nil, "C4", nil, "C4", nil]
-
-lyric += [:ge,  :ro,  :ge,  :ro,  :ge,  :ro,  :ge,  :ro]
-dura  += [n8,   n8,   n8,   n8,   n8,   n8,   n8,   n8]
-notes += ["C4", "C4", "D4", "D4", "E4", "E4", "F4", "F4"]
-
-lyric += [:ga,  :r,  :ga,  :r,  :ga, :r]
-dura  += [n8,   n8,  n8,   n8,  n4]
-notes += ["E4", nil, "D4", nil, "C4"]
-
-convert2wav(lyric, dura, notes, 'oto.wav')
-#=end
+convert2wav(lyric, dura, notes, outputfile)

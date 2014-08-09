@@ -8,7 +8,7 @@ Please read http://utau2008.web.fc2.com/ before install.
 
 Convert an example song
 
-    ruby bin/utau4linux
+    ruby bin/utau4linux examples/kaeru.mml oto.wav
 
 Listen to an example song
 

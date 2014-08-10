@@ -257,7 +257,7 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     puts arg if $verbose
     `wine #{$tool} #{arg} 2>/dev/null`
   else
-    samples = len * 44100 / 960 # TODO tempo 120
+    samples = len * 120 * 44100 / (960 * tempo)
     if symbol == :r
       File.open("#{$output}.dat", "a+b"){|fd| fd.write("\000\000" * samples)}
     else

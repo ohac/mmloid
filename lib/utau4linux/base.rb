@@ -257,11 +257,14 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     puts arg if $verbose
     `wine #{$tool} #{arg} 2>/dev/null`
   else
+    len32 = env[7]
+    len32 = len32.nil? ? 0 : len32.to_i
     samples = len * 120 * 44100 / (960 * tempo)
+    samples += (len2.to_i - len32.to_i) * 44100 / 1000
     if symbol == :r
       File.open("#{$output}.dat", "a+b"){|fd| fd.write("\000\000" * samples)}
     else
-      # TODO handle $stp, len2, len32
+      # TODO handle len32
       fadein = (0.005 * 44100).to_i
       fadeout = (0.035 * 44100).to_i
       arg = "#{genwave} -t s16 -r 44100 #{$output}.s16 fade t #{fadein}s #{samples}s #{fadeout}s"

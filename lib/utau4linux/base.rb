@@ -235,16 +235,19 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
   len32 = len32.to_i
   len4, len42 = ROMA[nsym][4], ROMA[nsym][5].to_i
   env << len32 if len32 != 0
+  len3 = 0 unless len3
+  len4 = 0 unless len4
   len2 = len3 + len32 - len4
   len2 = "#{len2 >= 0 ? '+' : ''}#{len2}"
   genwave = "#{$oto}/R.wav"
   if symbol == :r
     env = [0, 0]
   else
-    FileUtils.ln("#{$oto}/#{sym2}.wav", inwav)
+    kasa = /\/kasa\// === $oto ? '_' : ''
+    FileUtils.ln("#{$oto}/#{kasa}#{sym2}.wav", inwav)
     genwave = $tempwav
     if $resamp != 'sox'
-      FileUtils.ln("#{$oto}/#{sym2}_wav.frq", inwavfrq)
+      FileUtils.ln("#{$oto}/#{kasa}#{sym2}_wav.frq", inwavfrq)
       pitchb2 ||= [0] * 123
       pitchb2 = encode(pitchb2)
       lenreq = len + 20 unless lenreq # TODO

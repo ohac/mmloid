@@ -8,6 +8,7 @@ if ARGV.size < 2
   puts " -v : verbose"
   puts " -s : use SoX instead of #{$tool}"
   puts " -e : #{$resamp} (default), sox"
+  puts " -o : voice directory #{$oto} (default)"
   exit
 end
 
@@ -18,6 +19,8 @@ $usesox = ARGV.include?('-s')
 $rmnoise = ARGV.include?('-n')
 enginei = ARGV.index('-e')
 $resamp = ARGV[enginei + 1] if enginei
+otoi = ARGV.index('-o')
+$oto = ARGV[otoi + 1] if otoi
 
 @tempo = 120
 @octave = 4

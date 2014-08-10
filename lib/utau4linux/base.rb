@@ -242,16 +242,30 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     env = [0, 0]
   else
     FileUtils.ln("#{$oto}/#{sym2}.wav", inwav)
-    FileUtils.ln("#{$oto}/#{sym2}_wav.frq", inwavfrq)
     genwave = $tempwav
-    pitchb2 ||= [0] * 123
-    pitchb2 = encode(pitchb2)
-    lenreq = len + 20 unless lenreq # TODO
-    arg = "#{inwav} #{genwave} #{pitchp} #{vel} \"#{$flag}\" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} \"!#{tempo}\" #{pitchb2}"
-    puts arg if $verbose
-    `wine #{$resamp} #{arg} 2>/dev/null`
+    if $resamp != 'sox'
+      FileUtils.ln("#{$oto}/#{sym2}_wav.frq", inwavfrq)
+      pitchb2 ||= [0] * 123
+      pitchb2 = encode(pitchb2)
+      lenreq = len + 20 unless lenreq # TODO
+      arg = "#{inwav} #{genwave} #{pitchp} #{vel} \"#{$flag}\" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} \"!#{tempo}\" #{pitchb2}"
+      puts arg if $verbose
+      `wine #{$resamp} #{arg} 2>/dev/null`
+      FileUtils.rm_f(inwavfrq)
+    else
+      nn = 'C D EF G A B'.index(pitchp[0])
+      if pitchp[1] == '#'
+        nn += 1
+        oct = pitchp[2..-1].to_i
+      else
+        oct = pitchp[1..-1].to_i
+      end
+      nn += 12 * (oct - 4) + 4
+      arg = "#{inwav} -r 44100 -b 16 #{genwave} pitch #{100 * nn}"
+      puts arg if $verbose
+      `sox #{arg}`
+    end
     FileUtils.rm_f(inwav)
-    FileUtils.rm_f(inwavfrq)
   end
   unless $usesox
     arg = "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
@@ -273,7 +287,7 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
       `sox -V1 #{arg}`
       if $rmnoise
         FileUtils.mv("#{$output}.s16", "#{$output}.old")
-        arg = " -t s16 -r 44100 --channels 1 #{$output}.old -t s16 -r 44100 --channels 1 #{$output}.s16 fade l 0s 0s #{samples / 5}s"
+        arg = "-t s16 -r 44100 --channels 1 #{$output}.old -t s16 -r 44100 --channels 1 #{$output}.s16 fade l 0s 0s #{samples / 5}s"
         puts arg if $verbose
         `sox #{arg}`
         FileUtils.rm_f("#{$output}.old")

@@ -4,7 +4,10 @@ $: << File.join(File.dirname(__FILE__), '../lib') # TODO gem
 require 'utau4linux'
 
 if ARGV.size < 2
-  puts "usage: ruby bin/utau4linux input.mml output.wav [-v] [-s]"
+  puts "usage: ruby bin/utau4linux input.mml output.wav [-v] [-s] [-e engine]"
+  puts " -v : verbose"
+  puts " -s : use SoX instead of #{$tool}"
+  puts " -e : #{$resamp} (default), sox"
   exit
 end
 
@@ -13,6 +16,8 @@ outputfile = ARGV[1]
 $verbose = ARGV.include?('-v')
 $usesox = ARGV.include?('-s')
 $rmnoise = ARGV.include?('-n')
+enginei = ARGV.index('-e')
+$resamp = ARGV[enginei + 1] if enginei
 
 @tempo = 120
 @octave = 4

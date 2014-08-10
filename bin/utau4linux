@@ -12,6 +12,7 @@ file = ARGV[0]
 outputfile = ARGV[1]
 $verbose = ARGV.include?('-v')
 $usesox = ARGV.include?('-s')
+$rmnoise = ARGV.include?('-n')
 
 @tempo = 120
 @octave = 4

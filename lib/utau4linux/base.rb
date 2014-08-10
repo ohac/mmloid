@@ -11,6 +11,7 @@ $stp = "0"
 $tempwav = "temp___.wav"
 $verbose = false
 $usesox = false
+$rmnoise = false
 
 B64TBL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
@@ -270,6 +271,12 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
       arg = "#{genwave} -t s16 -r 44100 #{$output}.s16 fade t #{fadein}s #{samples + len32s}s #{fadeout}s trim 0s #{samples}s"
       puts arg if $verbose
       `sox #{arg}`
+      if $rmnoise
+        FileUtils.mv("#{$output}.s16", "#{$output}.old")
+        arg = " -t s16 -r 44100 --channels 1 #{$output}.old -t s16 -r 44100 --channels 1 #{$output}.s16 fade l 0 0 0.05"
+        `sox #{arg}`
+        FileUtils.rm_f("#{$output}.old")
+      end
       if File.exist?("#{$output}.dat")
         `cat #{$output}.s16 >> #{$output}.dat`
       else

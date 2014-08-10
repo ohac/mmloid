@@ -259,6 +259,9 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
 end
 
 def convert2wav(lyric, dura, notes, output = $output)
+  fns = ['dat', 'whd'].map{|fnb| "#{$output}.#{fnb}"}
+  fns.each{|fn| FileUtils.rm_f(fn)}
+  s16fn = fns[0]
   i = 0
   while dura[i] do
     n = notes[i]
@@ -273,13 +276,8 @@ def convert2wav(lyric, dura, notes, output = $output)
     end
     i = note(lyric, i, dura[i], n)
   end
-  File.open(output, 'wb') do |fd|
-    ['whd', 'dat'].each do |fnb|
-      fn = "#{$output}.#{fnb}"
-      File.open(fn, 'rb') do |rfd|
-        fd.write(rfd.read)
-      end
-      FileUtils.rm_f(fn)
-    end
-  end
+  arg = "-r 44100 -t s16 --channels 1 #{s16fn} #{output}"
+  puts arg if $verbose
+  `sox #{arg}`
+  fns.each{|fn| FileUtils.rm_f(fn)}
 end

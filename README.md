@@ -2,17 +2,17 @@ UTAU for linux
 
 Please read http://utau2008.web.fc2.com/ before install.
 
-    sudo apt-get install wine unar ruby
+    sudo apt-get install wine unar ruby sox
     ./download.sh
     ./mkdefo.sh
 
 Convert an example song
 
-    ruby bin/utau4linux examples/kaeru.mml oto.wav
+    ruby bin/utau4linux examples/kaeru.mml oto.flac
 
 Listen to an example song
 
-    play oto.wav
+    play oto.flac
 
 Option: Download other voices (Check LISENCE before use)
 

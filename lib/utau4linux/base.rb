@@ -5,10 +5,10 @@ voice = %w[kasa/tan defota koe loli man2 momo nago oto oto.old][7]
 $oto = "voice/" + voice
 $tool = "wavtool2.exe"
 $resamp = "resampler.exe"
-$output = voice + ".wav"
+$output = "temp2___.wav"
 $flag = ""
 $stp = "0"
-$tempwav = "temp___.wav"
+$tempwav = "temp1___.wav"
 $verbose = false
 $usesox = false
 $rmnoise = false
@@ -297,6 +297,7 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
       end
       if File.exist?("#{$output}.dat")
         `cat #{$output}.s16 >> #{$output}.dat`
+        FileUtils.rm_f("#{$output}.s16")
       else
         FileUtils.mv("#{$output}.s16", "#{$output}.dat")
       end

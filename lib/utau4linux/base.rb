@@ -9,6 +9,7 @@ $output = voice + ".wav"
 $flag = ""
 $stp = "0"
 $tempwav = "temp___.wav"
+$verbose = false
 
 B64TBL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
@@ -244,11 +245,15 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     pitchb2 ||= [0] * 123
     pitchb2 = encode(pitchb2)
     lenreq = len + 20 unless lenreq # TODO
-    `wine #{$resamp} #{inwav} #{genwave} #{pitchp} #{vel} "#{$flag}" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} "!#{tempo}" #{pitchb2} 2>/dev/null`
+    arg = "#{inwav} #{genwave} #{pitchp} #{vel} \"#{$flag}\" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} \"!#{tempo}\" #{pitchb2}"
+    puts arg if $verbose
+    `wine #{$resamp} #{arg} 2>/dev/null`
     FileUtils.rm_f(inwav)
     FileUtils.rm_f(inwavfrq)
   end
-  `wine #{$tool} #{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')} 2>/dev/null`
+  arg = "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
+  puts arg if $verbose
+  `wine #{$tool} #{arg} 2>/dev/null`
   FileUtils.rm_f($tempwav)
   i + 1
 end

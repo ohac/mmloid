@@ -10,6 +10,7 @@ end
 
 file = ARGV[0]
 outputfile = ARGV[1]
+$verbose = ARGV[2] == '-v'
 
 @tempo = 120
 @octave = 4

@@ -4,13 +4,14 @@ $: << File.join(File.dirname(__FILE__), '../lib') # TODO gem
 require 'utau4linux'
 
 if ARGV.size < 2
-  puts "usage: ruby bin/utau4linux input.mml output.wav [-v]"
+  puts "usage: ruby bin/utau4linux input.mml output.wav [-v] [-s]"
   exit
 end
 
 file = ARGV[0]
 outputfile = ARGV[1]
-$verbose = ARGV[2] == '-v'
+$verbose = ARGV.include?('-v')
+$usesox = ARGV.include?('-s')
 
 @tempo = 120
 @octave = 4

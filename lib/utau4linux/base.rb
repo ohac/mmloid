@@ -10,6 +10,7 @@ $flag = ""
 $stp = "0"
 $tempwav = "temp___.wav"
 $verbose = false
+$usesox = false
 
 B64TBL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
@@ -251,9 +252,28 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     FileUtils.rm_f(inwav)
     FileUtils.rm_f(inwavfrq)
   end
-  arg = "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
-  puts arg if $verbose
-  `wine #{$tool} #{arg} 2>/dev/null`
+  unless $usesox
+    arg = "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
+    puts arg if $verbose
+    `wine #{$tool} #{arg} 2>/dev/null`
+  else
+    samples = len * 44100 / 960 # TODO tempo 120
+    if symbol == :r
+      File.open("#{$output}.dat", "a+b"){|fd| fd.write("\000\000" * samples)}
+    else
+      # TODO handle $stp, len2, len32
+      fadein = (0.005 * 44100).to_i
+      fadeout = (0.035 * 44100).to_i
+      arg = "#{genwave} -t s16 -r 44100 #{$output}.s16 fade t #{fadein}s #{samples}s #{fadeout}s"
+      puts arg if $verbose
+      `sox #{arg}`
+      if File.exist?("#{$output}.dat")
+        `cat #{$output}.s16 >> #{$output}.dat`
+      else
+        FileUtils.mv("#{$output}.s16", "#{$output}.dat")
+      end
+    end
+  end
   FileUtils.rm_f($tempwav)
   i + 1
 end

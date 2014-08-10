@@ -261,7 +261,10 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
         oct = pitchp[1..-1].to_i
       end
       nn += 12 * (oct - 4) + 4
-      arg = "#{inwav} -r 44100 -b 16 #{genwave} pitch #{100 * nn}"
+      arg = "#{inwav} -r 44100 -b 16 #{genwave}"
+      arg += " speed #{100 * nn}c"
+      stretch = len.to_f / tempo / 3
+      arg += " stretch #{stretch}" if stretch > 1.01
       puts arg if $verbose
       `sox #{arg}`
     end

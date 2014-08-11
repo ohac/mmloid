@@ -244,16 +244,20 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     env = [0, 0]
   else
     kasa = /\/kasa\// === $oto ? '_' : ''
+    FileUtils.rm_f(inwav)
     FileUtils.ln("#{$oto}/#{kasa}#{sym2}.wav", inwav)
     genwave = $tempwav
     if $resamp != 'sox'
+      FileUtils.rm_f(inwavfrq)
       FileUtils.ln("#{$oto}/#{kasa}#{sym2}_wav.frq", inwavfrq)
       pitchb2 ||= [0] * 123
       pitchb2 = encode(pitchb2)
       lenreq = len + 20 unless lenreq # TODO
       arg = "#{inwav} #{genwave} #{pitchp} #{vel} \"#{$flag}\" #{offset} #{lenreq} #{fixlen} #{endblank} #{vol} #{mod} \"!#{tempo}\" #{pitchb2}"
       puts arg if $verbose
-      `wine #{$resamp} #{arg} 2>/dev/null`
+      exe = (/\.exe$/ === $resamp ? 'wine ' : '') + $resamp
+      result = `#{exe} #{arg}#{$verbose ? '' : ' 2>/dev/null'}`
+      puts result if $verbose
       FileUtils.rm_f(inwavfrq)
     else
       nn = 'C D EF G A B'.index(pitchp[0])

@@ -21,6 +21,7 @@ enginei = ARGV.index('-e')
 $resamp = ARGV[enginei + 1] if enginei
 otoi = ARGV.index('-o')
 $oto = ARGV[otoi + 1] if otoi
+readini
 
 @tempo = 120
 @octave = 4

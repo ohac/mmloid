@@ -209,15 +209,17 @@ ROMA = {
 KANA2ROMA = {}
 ROMA.each{|k,v|KANA2ROMA[v[0]]=k}
 
-File.open("#{$oto}/oto.ini", 'r:Windows-31J') do |fd|
-  fd.readlines.each do |line|
-    line = line.encode('utf-8')
-    key, value = line.split('=')
-    key = key.split('.').first
-    roma = KANA2ROMA[key]
-    next unless roma
-    vs = value.split(',').drop(1).map(&:to_f)
-    ROMA[roma] += vs
+def readini
+  File.open("#{$oto}/oto.ini", 'r:Windows-31J') do |fd|
+    fd.readlines.each do |line|
+      line = line.encode('utf-8')
+      key, value = line.split('=')
+      key = key.split('.').first
+      roma = KANA2ROMA[key]
+      next unless roma
+      vs = value.split(',').drop(1).map(&:to_f)
+      ROMA[roma] += vs
+    end
   end
 end
 
@@ -249,7 +251,8 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     genwave = $tempwav
     if $resamp != 'sox'
       FileUtils.rm_f(inwavfrq)
-      FileUtils.ln("#{$oto}/#{kasa}#{sym2}_wav.frq", inwavfrq)
+      frq = "#{$oto}/#{kasa}#{sym2}_wav.frq"
+      FileUtils.ln(frq, inwavfrq) if File.exist?(frq)
       pitchb2 ||= [0] * 123
       pitchb2 = encode(pitchb2)
       lenreq = len + 20 unless lenreq # TODO

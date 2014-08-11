@@ -1,10 +1,10 @@
 #!/usr/bin/ruby
 # coding: utf-8
 $: << File.join(File.dirname(__FILE__), '../lib') # TODO gem
-require 'utau4linux'
+require 'mmloid'
 
 if ARGV.size < 2
-  puts "usage: ruby bin/utau4linux input.mml output.wav [-v] [-s] [-e engine]"
+  puts "usage: ruby bin/mmloid input.mml output.wav [-v] [-s] [-e engine]"
   puts " -v : verbose"
   puts " -s : use SoX instead of #{$tool}"
   puts " -e : #{$resamp} (default), sox"

@@ -1,4 +1,6 @@
-UTAU for linux
+MMLoid for Linux
+
+Download and generate UTAU default voice
 
 Please read http://utau2008.web.fc2.com/ before install.
 
@@ -6,13 +8,19 @@ Please read http://utau2008.web.fc2.com/ before install.
     ./download.sh
     ./mkdefo.sh
 
-Convert an example song
+Convert an example song (requires UTAU default voice)
 
-    ruby bin/utau4linux examples/kaeru.mml oto.flac
+    ruby bin/mmloid examples/kaeru.mml kaeru.flac -e sox
 
 Listen to an example song
 
-    play oto.flac
+    play kaeru.flac
+
+Option: get `tn_fnds` engine
+
+    git clone https://github.com/ohac/tn_fnds.git
+    cd tn_fnds/src
+    make
 
 Option: Download other voices (Check LISENCE before use)
 

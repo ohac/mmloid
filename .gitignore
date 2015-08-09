@@ -20,3 +20,6 @@ nagonemako_a2.uar
 oto.old.wav
 oto.wav
 TETO-tougou-110401.zip
+vendor/
+Gemfile.lock
+.bundle/

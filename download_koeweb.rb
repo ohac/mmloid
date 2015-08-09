@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 # encoding: utf-8
-# http://r.kawashima-lab.co.jp/koeweb/ (Koe-Web by Reisiu Sakai)
+# http://r.kawashima-lab.co.jp/koeweb/ (Koe-Web by Reisiu Sakai CC BY 2.1 JP)
 ws = [:ka, :e, :ru, :no, :u, :ta, :ga, :ki, :ko, :te, :ku, :yo, :ge, :ro]
 ns = [5,   3,  40,  24,  2,  15,  46,  6,   9,   18,  7,   37,  49,  42]
 jws = 'かえるのうたがきこてくよげろ'.split(//)

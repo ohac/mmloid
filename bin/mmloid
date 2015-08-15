@@ -44,6 +44,8 @@ loop do
   body = post
 end
 
+lastsound = :ra
+
 mml.gsub(ABNFParser::MMLLine) do |line|
   next if /^#/ === line
   line.chomp!
@@ -92,8 +94,9 @@ mml.gsub(ABNFParser::MMLLine) do |line|
       end
       dura << [@tempo, totallen]
       notes << note
+      lyric << lastsound
     else
-      lyric << ev[1..-1].to_sym
+      lastsound = ev[1..-1].to_sym
     end
   end
 end

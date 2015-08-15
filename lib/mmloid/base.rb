@@ -226,15 +226,11 @@ end
 
 def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
-  args = [$oto, $tool, $resamp, $flag, $stp, $usesox, $rmnoise, lyric, i, len1,
-          pitchp, lenreq, vel, vol, mod, pitchb2]
+  args = [$oto, $resamp, $flag, lyric, i, len1, pitchp, lenreq, vel, vol, mod,
+          pitchb2]
   FileUtils.mkdir_p('.cache')
-  cache = File.join('.cache', Digest::MD5.hexdigest(Marshal.dump(args)))
-  if File.exist?(cache)
-    FileUtils.rm_f("#{$output}.dat")
-    FileUtils.ln_s(cache, "#{$output}.dat")
-    return i + 1
-  end
+  cache = File.join('.cache',
+                    Digest::MD5.hexdigest(Marshal.dump(args)) + '.wav')
   symbol = lyric[i]
   nsym = lyric[i + 1]
   env = [0, 5, 35, 0, 100, 100, 0]
@@ -254,6 +250,8 @@ def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
   genwave = "#{$oto}/R.wav"
   if symbol == :r
     env = [0, 0]
+  elsif File.exist?(cache)
+    genwave = cache
   else
     kasa = /\/kasa\// === $oto ? '_' : ''
     FileUtils.rm_f(inwav)
@@ -289,6 +287,7 @@ def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
       `sox #{arg}`
     end
     FileUtils.rm_f(inwav)
+    FileUtils.cp(genwave, cache)
   end
   unless $usesox
     arg = "#{$output} #{genwave} #{$stp} #{len}@#{tempo}#{len2} #{env.join(' ')}"
@@ -324,7 +323,6 @@ def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
     end
   end
   FileUtils.rm_f($tempwav)
-  FileUtils.ln("#{$output}.dat", cache)
   i + 1
 end
 

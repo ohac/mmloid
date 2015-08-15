@@ -226,13 +226,13 @@ end
 
 def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
-  args = [$oto, $resamp, $flag, lyric, i, len1, pitchp, lenreq, vel, vol, mod,
-          pitchb2]
+  symbol = lyric[i]
+  nsym = lyric[i + 1]
+  args = [$oto, $resamp, $flag, symbol, nsym, i, len1, pitchp, lenreq, vel,
+          vol, mod, pitchb2]
   FileUtils.mkdir_p('.cache')
   cache = File.join('.cache',
                     Digest::MD5.hexdigest(Marshal.dump(args)) + '.wav')
-  symbol = lyric[i]
-  nsym = lyric[i + 1]
   env = [0, 5, 35, 0, 100, 100, 0]
   tempo = len1[0]
   len = len1[1]

@@ -7,7 +7,7 @@ Install
 Convert an example song
 
     $ sudo apt-get install sox
-    $ ruby download_koeweb.rb
+    $ bundle exec bin/dlkoeweb
     (Download Koe-Web voices (CC BY 2.1 JP) for kaeru.mml)
     $ bundle exec bin/mmloid examples/kaeru.mml kaeru.flac -o voice/reisiuja -e sox -s
 

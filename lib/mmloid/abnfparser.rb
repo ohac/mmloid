@@ -44,7 +44,7 @@ EOS
   MMLLine = mmlline.regexp()
   Event = event.regexp()
 
-  def self.parsenotestr(str, octave, deflen, defdot)
+  def self.parsenotestr(str, octave, deflen, defdot = false)
     i = 1
     c = str[0]
     sharp = str[1]

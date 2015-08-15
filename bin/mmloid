@@ -76,8 +76,21 @@ mml.gsub(ABNFParser::MMLLine) do |line|
       dura << [@tempo, 1920 / len + (dot ? 1920 / 2 / len : 0)]
       notes << nil
     when /[a-g]/
-      note, len, dot = ABNFParser.parsenotestr(ev, @octave, @deflen, false)
-      dura << [@tempo, 1920 / len + (dot ? 1920 / 2 / len : 0)]
+      if ev.index('&') # tie
+        tnotes = ev.split('&')
+        notestr = tnotes.shift
+        note, len, dot = ABNFParser.parsenotestr(notestr, @octave, @deflen)
+        totallen = 1920 / len + (dot ? 1920 / 2 / len : 0)
+        tnotes.each do |notestr|
+          len = nil
+          _, len, dot = ABNFParser.parsenotestr(notestr, @octave, @deflen)
+          totallen += 1920 / len + (dot ? 1920 / 2 / len : 0)
+        end
+      else # single note
+        note, len, dot = ABNFParser.parsenotestr(ev, @octave, @deflen)
+        totallen = 1920 / len + (dot ? 1920 / 2 / len : 0)
+      end
+      dura << [@tempo, totallen]
       notes << note
     else
       lyric << ev[1..-1].to_sym

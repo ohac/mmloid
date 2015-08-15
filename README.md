@@ -32,6 +32,9 @@ Please read http://utau2008.web.fc2.com/ before install.
     $ sudo apt-get install wine unar ruby
     $ ./download.sh
     $ ./mkdefo.sh
+    $ bundle exec bin/mmloid examples/kaeru.mml kaeru.flac -o voice/oto -e ./tn_fnds -s
+    $ bundle exec bin/mmloid examples/kaeru.mml kaeru.flac -o voice/oto -e resampler.exe -s
+    $ bundle exec bin/mmloid examples/kaeru.mml kaeru.flac -o voice/oto -e resampler.exe
 
 Option: Download other voices (Check LICENSE before to use)
 
@@ -41,6 +44,7 @@ Option: Download other voices (Check LICENSE before to use)
     $ ./download_kasaneteto.sh # http://kasaneteto.jp/
     $ ./download_oldvoice.sh
     $ ./download_othervoices.sh
+    $ bundle exec bin/mmloid examples/kaeru.mml kaeru.flac -o voice/kasa/tan -e ./tn_fnds -s # FIXME
 
 Option: Download other engines (Check LICENSE before to use)
 

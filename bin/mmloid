@@ -77,7 +77,7 @@ mml.gsub(ABNFParser::MMLLine) do |line|
       lyric << :r
       dura << [@tempo, 1920 / len + (dot ? 1920 / 2 / len : 0)]
       notes << nil
-    when /[a-g]/
+    when /[~_a-g]/
       if ev.index('&') # tie
         tnotes = ev.split('&')
         notestr = tnotes.shift

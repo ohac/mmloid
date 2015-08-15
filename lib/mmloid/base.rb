@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 # encoding: utf-8
 require 'fileutils'
+require 'digest/md5'
 voice = %w[kasa/tan defota koe loli man2 momo nago oto oto.old][7]
 $oto = "voice/" + voice
 $tool = "wavtool2.exe"
@@ -223,8 +224,17 @@ def readini
   end
 end
 
-def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
+def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
     mod = 0, pitchb2 = nil)
+  args = [$oto, $tool, $resamp, $flag, $stp, $usesox, $rmnoise, lyric, i, len1,
+          pitchp, lenreq, vel, vol, mod, pitchb2]
+  FileUtils.mkdir_p('.cache')
+  cache = File.join('.cache', Digest::MD5.hexdigest(Marshal.dump(args)))
+  if File.exist?(cache)
+    FileUtils.rm_f("#{$output}.dat")
+    FileUtils.ln_s(cache, "#{$output}.dat")
+    return i + 1
+  end
   symbol = lyric[i]
   nsym = lyric[i + 1]
   env = [0, 5, 35, 0, 100, 100, 0]
@@ -314,6 +324,7 @@ def note(lyric, i, len1, pitchp = nil, lenreq = nil, vel = 100, vol = 100,
     end
   end
   FileUtils.rm_f($tempwav)
+  FileUtils.ln("#{$output}.dat", cache)
   i + 1
 end
 

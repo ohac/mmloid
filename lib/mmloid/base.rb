@@ -254,8 +254,10 @@ def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
     genwave = cache
   else
     kasa = /\/kasa\// === $oto ? '_' : ''
+    fn = "#{$oto}/#{kasa}#{sym2}.wav"
+    raise "not found: #{symbol}" unless File.exist?(fn)
     FileUtils.rm_f(inwav)
-    FileUtils.ln("#{$oto}/#{kasa}#{sym2}.wav", inwav)
+    FileUtils.ln(fn, inwav)
     genwave = $tempwav
     if $resamp != 'sox'
       FileUtils.rm_f(inwavfrq)
@@ -298,6 +300,7 @@ def note(lyric, i, len1, pitchp, lenreq = nil, vel = 100, vol = 100,
     len32 = len32.nil? ? 0 : len32.to_i
     samples = len * 120 * 44100 / (960 * tempo)
     samples += (len2.to_i - len32) * 44100 / 1000
+    raise "negative samples: #{samples}" if samples < 0
     if symbol == :r
       File.open("#{$output}.dat", "a+b"){|fd| fd.write("\000\000" * samples)}
     else

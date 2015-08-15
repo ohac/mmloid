@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
 # coding: utf-8
+require 'erb'
 $: << File.join(File.dirname(__FILE__), '../lib') # TODO gem
 require 'mmloid'
 
@@ -32,6 +33,9 @@ dura = []
 notes = []
 
 body = File.open(file, 'r'){|fd|fd.read}
+if /\.rmml/ === file
+  body = ERB.new(body).result
+end
 mml = ''
 
 loop do

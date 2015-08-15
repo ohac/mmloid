@@ -48,7 +48,7 @@ loop do
   body = post
 end
 
-lastsound = :ra
+soundqueue = []
 
 mml.gsub(ABNFParser::MMLLine) do |line|
   next if /^#/ === line
@@ -98,9 +98,11 @@ mml.gsub(ABNFParser::MMLLine) do |line|
       end
       dura << [@tempo, totallen]
       notes << note
+      lastsound = soundqueue.shift
+      lastsound = :ra unless lastsound
       lyric << lastsound
     else
-      lastsound = ev[1..-1].to_sym
+      soundqueue << ev[1..-1].to_sym
     end
   end
 end

@@ -1,9 +1,5 @@
 t140
 l8
-<% "わがはいわねこである。なまえわまだない。".split(//).each do |w| %>
-<% if w == "。" %>
-r
-<% else %>
-<%= w %>c
-<% end %>
-<% end %>
+<%= "わがはいわねこである なまえわまだない".split(//).join(' ') %>
+
+dddddedddd r ddddcdcd
